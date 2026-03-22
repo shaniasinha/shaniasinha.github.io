@@ -1,1 +1,656 @@
-Hi Internet
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shania Sinha | XP Desktop</title>
+  <style>
+    :root {
+      --xp-blue-1: #0f5ad6;
+      --xp-blue-2: #2a7bf2;
+      --xp-blue-3: #0a3d96;
+      --taskbar-blue: #1d4fa7;
+      --taskbar-blue-2: #2b66c8;
+      --start-green-1: #4cae4f;
+      --start-green-2: #2f8b33;
+      --window-border: #0d3c88;
+      --window-bg: #ece9d8;
+      --icon-label-bg: rgba(8, 52, 125, 0.65);
+      --icon-label-focus: rgba(62, 114, 230, 0.75);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      font-family: Tahoma, Verdana, sans-serif;
+      cursor: url("default_arrow.cur"), auto;
+      user-select: none;
+    }
+
+    button,
+    a,
+    .desktop-icon,
+    .window-btn,
+    .title-btn,
+    .start-button {
+      cursor: url("arrow_l.cur"), pointer;
+    }
+
+    body {
+      background: #4f89d1;
+      background-image: url("bliss.jpg");
+      background-size: cover;
+      background-position: center;
+      color: #111;
+    }
+
+    .desktop {
+      position: fixed;
+      inset: 0;
+      padding: 14px;
+      padding-bottom: 54px;
+    }
+
+    .desktop-icons {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(80px, 100px));
+      gap: 14px 18px;
+      width: fit-content;
+    }
+
+    .desktop-icon {
+      width: 96px;
+      border: none;
+      background: transparent;
+      color: white;
+      text-shadow: 1px 1px 1px #032f6b;
+      padding: 2px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .desktop-icon:focus-visible .icon-label,
+    .desktop-icon:hover .icon-label {
+      background: var(--icon-label-focus);
+    }
+
+    .icon-art {
+      width: 46px;
+      height: 40px;
+      border-radius: 4px;
+      border: 1px solid rgba(0, 0, 0, 0.35);
+      background: linear-gradient(180deg, #fbfbfb 0%, #e6e6e6 100%);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 2px 2px 0 rgba(0, 0, 0, 0.2);
+      position: relative;
+    }
+
+    .icon-art::before {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 5px;
+      width: 32px;
+      height: 24px;
+      border: 1px solid #4874bf;
+      background: linear-gradient(180deg, #9ec4ff 0%, #74a3ef 100%);
+    }
+
+    .icon-art::after {
+      content: attr(data-glyph);
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -35%);
+      font-size: 18px;
+      text-shadow: none;
+    }
+
+    .icon-label {
+      font-size: 12px;
+      line-height: 1.2;
+      padding: 1px 4px;
+      border-radius: 2px;
+      text-align: center;
+      background: var(--icon-label-bg);
+      min-height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .window {
+      position: absolute;
+      width: min(700px, 90vw);
+      min-height: 180px;
+      border: 1px solid var(--window-border);
+      border-radius: 7px 7px 0 0;
+      background: var(--window-bg);
+      box-shadow: 3px 3px 9px rgba(0, 0, 0, 0.45);
+      display: none;
+    }
+
+    .window.active {
+      display: block;
+    }
+
+    .window-title {
+      height: 30px;
+      border-radius: 7px 7px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6px;
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      background: linear-gradient(180deg, var(--xp-blue-2) 0%, var(--xp-blue-1) 55%, var(--xp-blue-3) 100%);
+    }
+
+    .title-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .title-dot {
+      width: 15px;
+      height: 15px;
+      border-radius: 2px;
+      background: linear-gradient(180deg, #ffef8d 0%, #f1c948 100%);
+      border: 1px solid rgba(0, 0, 0, 0.35);
+      flex: 0 0 auto;
+    }
+
+    .title-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .title-controls {
+      display: flex;
+      gap: 4px;
+    }
+
+    .title-btn {
+      border: 1px solid rgba(0, 0, 0, 0.45);
+      border-radius: 3px;
+      width: 22px;
+      height: 20px;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(180deg, #6fb4ff 0%, #2573d2 100%);
+      padding: 0;
+    }
+
+    .title-btn.close {
+      background: linear-gradient(180deg, #ff9e86 0%, #cb3d2d 100%);
+    }
+
+    .window-content {
+      padding: 15px;
+      font-size: 14px;
+      max-height: min(68vh, 550px);
+      overflow: auto;
+      line-height: 1.45;
+      background: #f4f3ea;
+      border-top: 1px solid #8ca9d8;
+    }
+
+    h2,
+    h3 {
+      margin: 0 0 8px;
+      color: #093c8d;
+      font-family: "Trebuchet MS", Verdana, sans-serif;
+    }
+
+    p,
+    ul {
+      margin-top: 0;
+    }
+
+    ul {
+      padding-left: 18px;
+    }
+
+    .chip {
+      display: inline-block;
+      font-size: 11px;
+      margin-right: 6px;
+      margin-bottom: 6px;
+      padding: 2px 6px;
+      border: 1px solid #6e93cf;
+      background: #dce8fd;
+      border-radius: 9px;
+      color: #11376f;
+    }
+
+    .note {
+      font-size: 12px;
+      background: #fff8d5;
+      border: 1px solid #d2bf5d;
+      padding: 6px 8px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+
+    .blog-link {
+      display: inline-block;
+      margin-top: 8px;
+      color: #0c3e9d;
+      font-weight: 700;
+    }
+
+    .taskbar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 40px;
+      background: linear-gradient(180deg, var(--taskbar-blue-2) 0%, var(--taskbar-blue) 60%, #123e86 100%);
+      border-top: 1px solid rgba(255, 255, 255, 0.45);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 6px;
+      z-index: 2000;
+    }
+
+    .start-button {
+      height: 30px;
+      min-width: 94px;
+      border: 1px solid #1a5a18;
+      border-radius: 0 12px 12px 0;
+      color: white;
+      font-weight: 700;
+      font-style: italic;
+      background: linear-gradient(180deg, #58c65b 0%, var(--start-green-1) 60%, var(--start-green-2) 100%);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    }
+
+    .task-buttons {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      overflow-x: auto;
+      flex: 1;
+      padding-bottom: 2px;
+    }
+
+    .window-btn {
+      height: 28px;
+      border-radius: 3px;
+      border: 1px solid #0b2d63;
+      background: linear-gradient(180deg, #6eaaf8 0%, #3675cb 100%);
+      color: white;
+      min-width: 130px;
+      max-width: 180px;
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: left;
+      padding: 0 10px;
+    }
+
+    .window-btn.active {
+      background: linear-gradient(180deg, #2d6acc 0%, #1a4eaa 100%);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+    }
+
+    .tray {
+      flex: 0 0 auto;
+      height: 30px;
+      min-width: 92px;
+      padding: 0 8px;
+      border: 1px solid #4a7ccc;
+      background: linear-gradient(180deg, #9ec4ff 0%, #5e97e8 100%);
+      color: white;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      border-radius: 3px;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.6);
+    }
+
+    @media (max-width: 720px) {
+      .desktop {
+        padding: 12px;
+        padding-bottom: 56px;
+      }
+
+      .desktop-icons {
+        grid-template-columns: repeat(2, minmax(78px, 95px));
+        gap: 10px 12px;
+      }
+
+      .window {
+        width: calc(100vw - 18px);
+        left: 9px !important;
+        top: 58px !important;
+      }
+
+      .window-content {
+        max-height: 60vh;
+      }
+
+      .start-button {
+        min-width: 74px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="desktop">
+    <section class="desktop-icons" aria-label="Desktop Icons">
+      <button class="desktop-icon" data-window="projects">
+        <span class="icon-art" data-glyph="PRJ"></span>
+        <span class="icon-label">My Projects</span>
+      </button>
+      <button class="desktop-icon" data-window="cv">
+        <span class="icon-art" data-glyph="CV"></span>
+        <span class="icon-label">Academic CV</span>
+      </button>
+      <button class="desktop-icon" data-window="current">
+        <span class="icon-art" data-glyph="NOW"></span>
+        <span class="icon-label">Now Working On</span>
+      </button>
+      <button class="desktop-icon" data-window="research">
+        <span class="icon-art" data-glyph="R&D"></span>
+        <span class="icon-label">Research Interests</span>
+      </button>
+      <button class="desktop-icon" data-window="contact">
+        <span class="icon-art" data-glyph="MSG"></span>
+        <span class="icon-label">Contact Me</span>
+      </button>
+      <button class="desktop-icon" data-window="blog">
+        <span class="icon-art" data-glyph="TXT"></span>
+        <span class="icon-label">Blog</span>
+      </button>
+    </section>
+
+    <section class="window" id="projects-window" style="left: 180px; top: 60px;">
+      <header class="window-title">
+        <div class="title-left">
+          <span class="title-dot"></span>
+          <span class="title-text">Projects Explorer</span>
+        </div>
+        <div class="title-controls">
+          <button class="title-btn" aria-label="Minimize" data-action="minimize">_</button>
+          <button class="title-btn close" aria-label="Close" data-action="close">X</button>
+        </div>
+      </header>
+      <div class="window-content">
+        <div class="note">Replace each project block with your real repo details and links.</div>
+        <h2>Featured Projects</h2>
+        <h3>Project One</h3>
+        <p>Short summary of the problem, your contribution, and impact.</p>
+        <p><span class="chip">Python</span><span class="chip">ML</span><span class="chip">Data Viz</span></p>
+        <p><a href="#">GitHub Repo</a> | <a href="#">Live Demo</a></p>
+        <h3>Project Two</h3>
+        <p>Describe architecture choices and what you learned.</p>
+        <p><span class="chip">Web</span><span class="chip">Full Stack</span><span class="chip">Open Source</span></p>
+        <p><a href="#">GitHub Repo</a></p>
+      </div>
+    </section>
+
+    <section class="window" id="cv-window" style="left: 240px; top: 100px;">
+      <header class="window-title">
+        <div class="title-left">
+          <span class="title-dot"></span>
+          <span class="title-text">Academic CV</span>
+        </div>
+        <div class="title-controls">
+          <button class="title-btn" aria-label="Minimize" data-action="minimize">_</button>
+          <button class="title-btn close" aria-label="Close" data-action="close">X</button>
+        </div>
+      </header>
+      <div class="window-content">
+        <h2>Education</h2>
+        <ul>
+          <li>Degree, Institution, Year</li>
+          <li>Thesis title / advisor (optional)</li>
+        </ul>
+        <h2>Publications</h2>
+        <ul>
+          <li>Author(s), Title, Venue, Year</li>
+          <li>Author(s), Title, Venue, Year</li>
+        </ul>
+        <h2>Awards & Fellowships</h2>
+        <ul>
+          <li>Award Name, Year</li>
+        </ul>
+        <h2>Teaching & Service</h2>
+        <ul>
+          <li>Role, Course/Lab, Term</li>
+        </ul>
+        <p><a href="#">Download Full CV (PDF)</a></p>
+      </div>
+    </section>
+
+    <section class="window" id="current-window" style="left: 300px; top: 145px;">
+      <header class="window-title">
+        <div class="title-left">
+          <span class="title-dot"></span>
+          <span class="title-text">What I am Working On</span>
+        </div>
+        <div class="title-controls">
+          <button class="title-btn" aria-label="Minimize" data-action="minimize">_</button>
+          <button class="title-btn close" aria-label="Close" data-action="close">X</button>
+        </div>
+      </header>
+      <div class="window-content">
+        <h2>Current Focus</h2>
+        <ul>
+          <li>Project or paper in progress</li>
+          <li>Experiment or implementation update</li>
+          <li>Upcoming conference/course milestone</li>
+        </ul>
+        <h2>Status Notes</h2>
+        <p>Use this panel as a living changelog so visitors can see what is active right now.</p>
+      </div>
+    </section>
+
+    <section class="window" id="research-window" style="left: 210px; top: 84px;">
+      <header class="window-title">
+        <div class="title-left">
+          <span class="title-dot"></span>
+          <span class="title-text">Research Interests</span>
+        </div>
+        <div class="title-controls">
+          <button class="title-btn" aria-label="Minimize" data-action="minimize">_</button>
+          <button class="title-btn close" aria-label="Close" data-action="close">X</button>
+        </div>
+      </header>
+      <div class="window-content">
+        <h2>Areas</h2>
+        <p><span class="chip">Human-Computer Interaction</span><span class="chip">AI for Education</span><span class="chip">Responsible ML</span></p>
+        <h2>Questions I Care About</h2>
+        <ul>
+          <li>How can intelligent systems improve real-world decision making?</li>
+          <li>How do we evaluate fairness and interpretability in deployed models?</li>
+          <li>What designs make research tools more accessible?</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="window" id="contact-window" style="left: 260px; top: 130px;">
+      <header class="window-title">
+        <div class="title-left">
+          <span class="title-dot"></span>
+          <span class="title-text">Contact</span>
+        </div>
+        <div class="title-controls">
+          <button class="title-btn" aria-label="Minimize" data-action="minimize">_</button>
+          <button class="title-btn close" aria-label="Close" data-action="close">X</button>
+        </div>
+      </header>
+      <div class="window-content">
+        <h2>Get in Touch</h2>
+        <ul>
+          <li>Email: <a href="mailto:you@example.com">you@example.com</a></li>
+          <li>GitHub: <a href="https://github.com/your-username">github.com/your-username</a></li>
+          <li>LinkedIn: <a href="https://www.linkedin.com/in/your-profile/">linkedin.com/in/your-profile</a></li>
+        </ul>
+        <p>Open to collaboration, research partnerships, and speaking opportunities.</p>
+      </div>
+    </section>
+
+    <section class="window" id="blog-window" style="left: 330px; top: 175px;">
+      <header class="window-title">
+        <div class="title-left">
+          <span class="title-dot"></span>
+          <span class="title-text">Blog Hub</span>
+        </div>
+        <div class="title-controls">
+          <button class="title-btn" aria-label="Minimize" data-action="minimize">_</button>
+          <button class="title-btn close" aria-label="Close" data-action="close">X</button>
+        </div>
+      </header>
+      <div class="window-content">
+        <h2>Blog</h2>
+        <p>Desktop shortcut for your writing. Publish research notes, project devlogs, or tutorials.</p>
+        <p><a class="blog-link" href="blog.html">Open Blog Page</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="taskbar">
+    <button class="start-button">start</button>
+    <div class="task-buttons" id="taskButtons"></div>
+    <div class="tray" id="clock">12:00 AM</div>
+  </footer>
+
+  <script>
+    const iconButtons = document.querySelectorAll('.desktop-icon');
+    const windows = document.querySelectorAll('.window');
+    const taskButtons = document.getElementById('taskButtons');
+
+    let highestZ = 30;
+
+    function focusWindow(win) {
+      highestZ += 1;
+      win.style.zIndex = highestZ;
+      windows.forEach((item) => item.classList.remove('focused'));
+      win.classList.add('focused');
+      syncTaskButtons();
+    }
+
+    function openWindow(id) {
+      const win = document.getElementById(`${id}-window`);
+      if (!win) return;
+      win.classList.add('active');
+      focusWindow(win);
+      syncTaskButtons();
+    }
+
+    function hideWindow(win) {
+      win.classList.remove('active');
+      syncTaskButtons();
+    }
+
+    function syncTaskButtons() {
+      const activeWindows = Array.from(windows).filter((win) => win.classList.contains('active'));
+      taskButtons.innerHTML = '';
+
+      activeWindows
+        .sort((a, b) => Number(a.style.zIndex || 0) - Number(b.style.zIndex || 0))
+        .forEach((win) => {
+          const btn = document.createElement('button');
+          btn.className = 'window-btn';
+          if (win.classList.contains('focused')) {
+            btn.classList.add('active');
+          }
+          btn.textContent = win.querySelector('.title-text').textContent;
+          btn.addEventListener('click', () => {
+            if (win.classList.contains('focused')) {
+              hideWindow(win);
+            } else {
+              win.classList.add('active');
+              focusWindow(win);
+            }
+          });
+          taskButtons.appendChild(btn);
+        });
+    }
+
+    iconButtons.forEach((icon) => {
+      icon.addEventListener('click', () => {
+        openWindow(icon.dataset.window);
+      });
+    });
+
+    windows.forEach((win) => {
+      const titleBar = win.querySelector('.window-title');
+
+      win.addEventListener('mousedown', () => focusWindow(win));
+
+      win.querySelectorAll('.title-btn').forEach((button) => {
+        button.addEventListener('click', (event) => {
+          event.stopPropagation();
+          const action = button.dataset.action;
+          if (action === 'close' || action === 'minimize') {
+            hideWindow(win);
+          }
+        });
+      });
+
+      let isDragging = false;
+      let offsetX = 0;
+      let offsetY = 0;
+
+      titleBar.addEventListener('mousedown', (event) => {
+        if (event.target.closest('.title-controls')) return;
+        isDragging = true;
+        focusWindow(win);
+        const rect = win.getBoundingClientRect();
+        offsetX = event.clientX - rect.left;
+        offsetY = event.clientY - rect.top;
+      });
+
+      document.addEventListener('mousemove', (event) => {
+        if (!isDragging) return;
+
+        const maxX = window.innerWidth - win.offsetWidth;
+        const maxY = window.innerHeight - 52;
+
+        let x = event.clientX - offsetX;
+        let y = event.clientY - offsetY;
+
+        x = Math.max(4, Math.min(x, maxX));
+        y = Math.max(4, Math.min(y, maxY));
+
+        win.style.left = `${x}px`;
+        win.style.top = `${y}px`;
+      });
+
+      document.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+    });
+
+    function updateClock() {
+      const clock = document.getElementById('clock');
+      const now = new Date();
+      clock.textContent = now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    openWindow('projects');
+  </script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog | XP Notes</title>
+  <style>
+    :root {
+      --blue-1: #0f5ad6;
+      --blue-2: #2a7bf2;
+      --blue-3: #0a3d96;
+      --panel-bg: #ece9d8;
+      --border: #0d3c88;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      font-family: Tahoma, Verdana, sans-serif;
+      cursor: url("default_arrow.cur"), auto;
+      background: #4f89d1;
+      background-image: url("bliss.jpg");
+      background-size: cover;
+      background-position: center;
+    }
+
+    a,
+    button {
+      cursor: url("arrow_l.cur"), pointer;
+    }
+
+    .wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .window {
+      width: min(920px, 100%);
+      border: 1px solid var(--border);
+      border-radius: 7px 7px 0 0;
+      background: var(--panel-bg);
+      box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.35);
+    }
+
+    .title {
+      border-radius: 7px 7px 0 0;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      background: linear-gradient(180deg, var(--blue-2) 0%, var(--blue-1) 55%, var(--blue-3) 100%);
+    }
+
+    .title a {
+      color: #fff;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      padding: 3px 8px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.15);
+      font-weight: 700;
+    }
+
+    .content {
+      padding: 18px;
+      background: #f4f3ea;
+      border-top: 1px solid #8ca9d8;
+      line-height: 1.5;
+    }
+
+    h1,
+    h2 {
+      margin-top: 0;
+      color: #093c8d;
+      font-family: "Trebuchet MS", Verdana, sans-serif;
+    }
+
+    .intro {
+      font-size: 15px;
+      margin-bottom: 16px;
+    }
+
+    article {
+      border: 1px solid #b7cae9;
+      background: #ffffff;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    article h3 {
+      margin: 0 0 6px;
+      color: #0d3f97;
+    }
+
+    .meta {
+      font-size: 12px;
+      color: #355f9e;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 680px) {
+      .wrap {
+        padding: 12px;
+      }
+
+      .content {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="window">
+      <header class="title">
+        <span>Blog Notes.exe</span>
+        <a href="index.html">Back To Desktop</a>
+      </header>
+      <div class="content">
+        <h1>Blog</h1>
+        <p class="intro">Post research updates, devlogs, and project reflections here.</p>
+
+        <h2>Recent Posts</h2>
+        <article>
+          <h3>Post Title One</h3>
+          <div class="meta">March 2026 - Research Note</div>
+          <p>Write a short abstract of the post and link to the full version.</p>
+        </article>
+
+        <article>
+          <h3>Post Title Two</h3>
+          <div class="meta">February 2026 - Project Update</div>
+          <p>Share what changed, what went wrong, and what is next.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
