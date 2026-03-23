@@ -2,6 +2,8 @@
 
 I want to create a website that documents my life: personal growth, career and other cool things I learn along the way.
 
+❗ - the website is 99% vibecoded :3
+
 ## Credits
 
 - Window styling uses [XP.css](https://botoxparty.github.io/XP.css/) by [botoxparty](https://github.com/botoxparty/XP.css).
