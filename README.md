@@ -2,7 +2,7 @@
 
 I want to create a website that documents my life: personal growth, career and other cool things I learn along the way.
 
-❗ - the website is 99% vibecoded :3
+❗ - the website is 99% vibecoded :3 (as of 23 March, 2026)
 
 ## Credits
 
